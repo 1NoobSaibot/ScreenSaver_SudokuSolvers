@@ -13,6 +13,10 @@ namespace ScreenSaver_SudokuSolver
         static Pen normal;
         static Pen bold;
         static Font font;
+        static float dx = 8.5f;
+        static float dy = 5.7f;
+        static Random rnd = new Random();
+
         private int x;
         private int y;
         
@@ -34,6 +38,7 @@ namespace ScreenSaver_SudokuSolver
         public void draw(Graphics g)
         {
             int w = 30 * 9;
+            g.FillRectangle(new SolidBrush(Color.FromArgb(200, 0, 0, 0)), x, y, w, w);
             //Создание сетки
             g.DrawLine(bold, x, y, x + w, y);
             for (int Y = 0; Y < 3; Y++)
@@ -52,7 +57,8 @@ namespace ScreenSaver_SudokuSolver
 
             for (int X = 0; X < 9; X++)
                 for (int Y = 0; Y < 9; Y++)
-                    g.DrawString("0", font, green, x + 8.5f + X * 30, y + 5.7f + Y * 30);
+                    g.DrawString(rnd.Next() % 2 == 0 ? "0" : "1", font, green, x + dx + X * 30, y + dy + Y * 30);
+                    
         }
     }
 }
