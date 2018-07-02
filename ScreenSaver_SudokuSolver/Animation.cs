@@ -32,6 +32,7 @@ namespace ScreenSaver_SudokuSolver
         void repaint()
         {
             Pen pen = new Pen(new SolidBrush(Color.Green));
+            Solver solver = new Solver(20, 20);
             int x1, y1, x2, y2;
             x2 = rnd.Next() % 1920;
             y2 = rnd.Next() % 1080;
@@ -43,6 +44,7 @@ namespace ScreenSaver_SudokuSolver
                 y2 = rnd.Next() % 1080;
                 g.FillRectangle(new SolidBrush(Color.FromArgb(5, 0, 0, 0)), 0, 0, 1920, 1080);
                 g.DrawLine(pen, x1, y1, x2, y2);
+                solver.draw(g);
                 Thread.Sleep(15);
             } while (true);
             
