@@ -10,15 +10,17 @@ namespace ScreenSaver_SudokuSolver
 {
     class Animation
     {
-        readonly Bitmap cnvs;
-        readonly Graphics g;
+        Bitmap cnvs, buff;
+        Graphics g, gbuf;
         Random rnd = new Random();
         Task repainter;
 
         public Animation(int width, int height)
         {
             cnvs = new Bitmap(width, height);
+            buff = new Bitmap(width, height);
             g = Graphics.FromImage(cnvs);
+            gbuf = Graphics.FromImage(buff);
             g.Clear(Color.Black);
             repainter = new Task(repaint);
             repainter.Start();
@@ -26,23 +28,18 @@ namespace ScreenSaver_SudokuSolver
 
         internal Image getImage()
         {
-            return cnvs;
+            return buff;
         }
 
         void repaint()
         {
-            Pen pen = new Pen(new SolidBrush(Color.Green));
-            int x1, y1, x2, y2;
-            x2 = rnd.Next() % 1920;
-            y2 = rnd.Next() % 1080;
+            Solver solver = new Solver(20, 20);
+            
             do
             {
-                x1 = x2;
-                y1 = y2;
-                x2 = rnd.Next() % 1920;
-                y2 = rnd.Next() % 1080;
                 g.FillRectangle(new SolidBrush(Color.FromArgb(5, 0, 0, 0)), 0, 0, 1920, 1080);
-                g.DrawLine(pen, x1, y1, x2, y2);
+                solver.draw(g);
+                gbuf.DrawImage(cnvs, 0, 0);
                 Thread.Sleep(15);
             } while (true);
             
