@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SudokuLib;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ScreenSaver_SudokuSolver
@@ -19,11 +21,14 @@ namespace ScreenSaver_SudokuSolver
 
         private int x;
         private int y;
+        private Sudoku sudoku;
+        private Task solver;
         
         public Solver(int x, int y)
         {
             this.x = x;
             this.y = y;
+            sudoku = new Sudoku();
             if (normal == null)
             {
                 normal = new Pen(new SolidBrush(Color.Green));
@@ -32,7 +37,8 @@ namespace ScreenSaver_SudokuSolver
                 font = new Font(SystemFonts.DefaultFont, FontStyle.Regular);
                 font = new Font("CourierNew", 11, FontStyle.Regular);
             }
-            
+            solver = new Task(solve);
+            solver.Start();
         }
 
         public void draw(Graphics g)
@@ -57,8 +63,17 @@ namespace ScreenSaver_SudokuSolver
 
             for (int X = 0; X < 9; X++)
                 for (int Y = 0; Y < 9; Y++)
-                    g.DrawString(rnd.Next() % 2 == 0 ? "0" : "1", font, green, x + dx + X * 30, y + dy + Y * 30);
+                    g.DrawString(sudoku[X, Y].ToString(), font, green, x + dx + X * 30, y + dy + Y * 30);
                     
+        }
+
+        private void solve()
+        {
+            do
+            {
+                sudoku.initGame(0);
+                Thread.Sleep(10);
+            } while (true);
         }
     }
 }
