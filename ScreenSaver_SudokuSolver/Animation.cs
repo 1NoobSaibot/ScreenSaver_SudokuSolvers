@@ -10,6 +10,8 @@ namespace ScreenSaver_SudokuSolver
 {
     class Animation
     {
+        static int dbg_loopCounter = 0;
+
         Bitmap cnvs, buff;
         Graphics g, gbuf;
         Random rnd = new Random();
@@ -33,14 +35,23 @@ namespace ScreenSaver_SudokuSolver
 
         void repaint()
         {
-            Solver solver = new Solver(20, 20);
+            Solver[] solvers = new Solver[30];
+            for (int i = 0; i < solvers.Length; i++)
+                solvers[i] = new Solver(rnd.Next() % (1920 - 270), rnd.Next() % (1080 - 270));
+
+            Font font = new Font("Courier New", 20);
+            Brush dbg = new SolidBrush(Color.Red);
             
             do
             {
-                g.FillRectangle(new SolidBrush(Color.FromArgb(5, 0, 0, 0)), 0, 0, 1920, 1080);
-                solver.draw(g);
+                g.FillRectangle(new SolidBrush(Color.FromArgb(100, 0, 0, 0)), 0, 0, 1920, 1080);
+                for (int i = 0; i < solvers.Length; i++)
+                    solvers[i].draw(g);
+                g.DrawString("Loops Solve: " + Solver.dbg_loopCounter, font, dbg, 20, 20);
+                g.DrawString("Loops Repaint: " + Animation.dbg_loopCounter, font, dbg, 20, 60);
                 gbuf.DrawImage(cnvs, 0, 0);
                 Thread.Sleep(15);
+                dbg_loopCounter++;
             } while (true);
             
         }

@@ -12,12 +12,14 @@ namespace ScreenSaver_SudokuSolver
     class Solver
     {
         static Brush green = new SolidBrush(Color.Green);
+        static Brush black = new SolidBrush(Color.Black);
         static Pen normal;
         static Pen bold;
         static Font font;
         static float dx = 8.5f;
         static float dy = 5.7f;
-        static Random rnd = new Random();
+        static RandomLocker rnd = new RandomLocker();
+        public static int dbg_loopCounter = 0;
 
         private int x;
         private int y;
@@ -44,7 +46,7 @@ namespace ScreenSaver_SudokuSolver
         public void draw(Graphics g)
         {
             int w = 30 * 9;
-            g.FillRectangle(new SolidBrush(Color.FromArgb(200, 0, 0, 0)), x, y, w, w);
+            g.FillRectangle(new SolidBrush(Color.FromArgb(200, 0, 0, 0)), x - 10, y - 10, w + 20, w + 20);
             //Создание сетки
             g.DrawLine(bold, x, y, x + w, y);
             for (int Y = 0; Y < 3; Y++)
@@ -63,7 +65,15 @@ namespace ScreenSaver_SudokuSolver
 
             for (int X = 0; X < 9; X++)
                 for (int Y = 0; Y < 9; Y++)
-                    g.DrawString(sudoku[X, Y].ToString(), font, green, x + dx + X * 30, y + dy + Y * 30);
+                {
+                    if (sudoku.isFixed(X, Y))
+                    {
+                        g.FillRectangle(green, x + 2 + X * 30, y + 2 + Y * 30, 26, 26);
+                        g.DrawString(sudoku[X, Y].ToString(), font, black, x + dx + X * 30, y + dy + Y * 30);
+                    }
+                    else if (sudoku[X, Y] != 0) g.DrawString(sudoku[X, Y].ToString(), font, green, x + dx + X * 30, y + dy + Y * 30);
+                }
+                    
                     
         }
 
@@ -71,9 +81,12 @@ namespace ScreenSaver_SudokuSolver
         {
             do
             {
-                sudoku.initGame(0);
-                Thread.Sleep(10);
+                sudoku.initGame(40, rnd);
+                Thread.Sleep(100);
+                dbg_loopCounter++;
             } while (true);
         }
     }
+
+   
 }
