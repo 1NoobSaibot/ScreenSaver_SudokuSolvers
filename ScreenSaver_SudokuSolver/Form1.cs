@@ -13,7 +13,6 @@ namespace ScreenSaver_SudokuSolver
 {
     public partial class Form1 : Form
     {
-        Graphics gr;
         Animation animation;
         
         public Form1()
@@ -25,7 +24,6 @@ namespace ScreenSaver_SudokuSolver
             cnvs.Height = s.Height;
             cnvs.Width = s.Width;
             cnvs.Image = animation.getImage();
-            gr = Graphics.FromImage(cnvs.Image);
             refresher.Start();
         }
         
