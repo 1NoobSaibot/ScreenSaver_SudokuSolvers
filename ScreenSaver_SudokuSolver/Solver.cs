@@ -25,12 +25,14 @@ namespace ScreenSaver_SudokuSolver
         private int y;
         private Sudoku sudoku;
         private Task solver;
-        
+        private bool GameOver;
+
         public Solver(int x, int y)
         {
             this.x = x;
             this.y = y;
             sudoku = new Sudoku();
+            sudoku.OnSolved += OnGameSolved;
             if (normal == null)
             {
                 normal = new Pen(new SolidBrush(Color.Green));
@@ -77,16 +79,45 @@ namespace ScreenSaver_SudokuSolver
                     
         }
 
+
+        private void OnGameSolved(Sudoku sender)
+        {
+            GameOver = true;
+        }
+
         private void solve()
         {
             do
             {
-                sudoku.initGame(40, rnd);
+                sudoku.initGame(50, rnd);
+                GameOver = false;
                 Thread.Sleep(100);
-                dbg_loopCounter++;
+                do
+                {
+                    int x, y;
+                    for (int i = 0; i < 20; i++)
+                    {
+                        dbg_loopCounter++;
+                        x = rnd.Next() % 9;
+                        y = rnd.Next() % 9;
+                        if (sudoku[x, y] != 0) continue;
+                        byte solution = sudoku.isOnlyOneSolution(x, y);
+                        if (solution == 0) continue;
+                        else
+                        {
+                            sudoku[x, y] = solution;
+                            Thread.Sleep(1500);
+                            break;
+                        }
+                    }
+                    Thread.Sleep(500);
+                } while (!GameOver);
+                
             } while (true);
         }
+
+
     }
 
-   
+    
 }
